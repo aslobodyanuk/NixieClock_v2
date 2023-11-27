@@ -45,7 +45,7 @@ boolean flipInit;
 byte startCathode[4], endCathode[4];
 byte glitchCounter, glitchMax, glitchIndic;
 boolean glitchFlag, indiState;
-byte curMode = 0;
+byte curMode = 0;   // 0 часы, 1 настройка часов
 boolean currentDigit = false;
 int8_t changeHrs, changeMins;
 boolean lampState = false;

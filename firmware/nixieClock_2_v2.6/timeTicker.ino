@@ -12,7 +12,7 @@ void calculateTime() {
       mins++;
       minsCount++;
 
-      if (minsCount >= 15) {            // каждые 15 мин
+      if (minsCount >= SYNC_RTC_EVERY_MINUTES) {            // каждые SYNC_RTC_EVERY_MINUTES мин синхронизация с RTC
         minsCount = 0;
         DateTime now = rtc.now();       // синхронизация с RTC
         secs = now.second();
