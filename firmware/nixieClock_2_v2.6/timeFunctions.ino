@@ -15,3 +15,11 @@ void setNewTime() {
   newTime[2] = (byte)mins / 10;
   newTime[3] = (byte)mins % 10;
 }
+
+// показать значение типа int на индикаторах (максимальное значение - 9999)
+void sendIndicatorValue(int16_t value) {
+  int16_t minutes = value % 100;
+  int16_t hours = value / 100;
+
+  sendTime(abs(hours), abs(minutes));
+}

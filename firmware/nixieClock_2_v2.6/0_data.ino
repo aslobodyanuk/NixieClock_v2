@@ -45,13 +45,14 @@ boolean flipInit;
 byte startCathode[4], endCathode[4];
 byte glitchCounter, glitchMax, glitchIndic;
 boolean glitchFlag, indiState;
-byte curMode = 0;   // 0 часы, 1 настройка часов
+byte curMode = 0;   // 0 часы, 1 настройка часов, 2 настройка сдвига времени
 boolean currentDigit = false;
 int8_t changeHrs, changeMins;
 boolean lampState = false;
 boolean anodeStates[] = {1, 1, 1, 1};
 byte currentLamp, flipEffectStages;
 bool trainLeaving;
+boolean timeShiftAdjusted = false;
 
 const uint8_t CRTgamma[256] PROGMEM = {
   0,    0,    1,    1,    1,    1,    1,    1,

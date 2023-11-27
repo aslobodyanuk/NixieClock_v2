@@ -1,22 +1,42 @@
 void settingsTick() {
   if (curMode == 1) {
-    if (blinkTimer.isReady()) {
-      sendTime(changeHrs, changeMins);
-      lampState = !lampState;
-      if (lampState) {
-        anodeStates[0] = 1;
-        anodeStates[1] = 1;
-        anodeStates[2] = 1;
-        anodeStates[3] = 1;
-      } else {
-        if (!currentDigit) {
-          anodeStates[0] = 0;
-          anodeStates[1] = 0;
-        } else {
-          anodeStates[2] = 0;
-          anodeStates[3] = 0;
-        }
-      }
+    tickTimeSettingMode();
+  }
+  if (curMode == 2) {
+    tickTimeShiftSettingMode();
+  }
+}
+
+void tickTimeShiftSettingMode() {
+  if (!blinkTimer.isReady()) {
+    return;
+  }
+  lampState = !lampState;
+
+  sendIndicatorValue(TIME_SHIFT);
+  if (lampState) {
+    setAllAnodeStates(true);
+  } else {
+    setAllAnodeStates(false);
+  }
+}
+
+void tickTimeSettingMode() {
+  if (!blinkTimer.isReady()) {
+    return;
+  }
+
+  sendTime(changeHrs, changeMins);
+  lampState = !lampState;
+  if (lampState) {
+    setAllAnodeStates(true);
+  } else {
+    if (!currentDigit) {
+      anodeStates[0] = 0;
+      anodeStates[1] = 0;
+    } else {
+      anodeStates[2] = 0;
+      anodeStates[3] = 0;
     }
   }
 }
@@ -55,6 +75,7 @@ void buttonsTick() {
       }
       sendTime(changeHrs, changeMins);
     }
+
   } else if (curMode == 0) {
     // переключение эффектов цифр
     if (btnR.isClick()) {
@@ -82,17 +103,39 @@ void buttonsTick() {
     }
 
     // переключение глюков
-    if (btnL.isHolded()) {
+    if (btnR.isHolded()) {
       GLITCH_ALLOWED = !GLITCH_ALLOWED;
       EEPROM.put(2, GLITCH_ALLOWED);
+
+      if (GLITCH_ALLOWED == true) {
+        initializeGlitches();
+      }
+    }
+
+    // настройка сдвига времени
+    if (btnL.isHolded()) {
+      curMode = 2;
+    }
+
+  } else if (curMode == 2) {
+    if (btnR.isClick()) {
+      TIME_SHIFT--;
+      sendIndicatorValue(TIME_SHIFT);
+    }
+    if (btnL.isClick()) {
+      TIME_SHIFT++;
+      sendIndicatorValue(TIME_SHIFT);
+    }
+    if (btnSet.isHolded()) {
+      curMode = 0;
+      setAllAnodeStates(true);
+      EEPROM.put(3, TIME_SHIFT);
+      sendTime(hrs, mins);
     }
   }
 
-  if (btnSet.isHolded()) {
-    anodeStates[0] = 1;
-    anodeStates[1] = 1;
-    anodeStates[2] = 1;
-    anodeStates[3] = 1;
+  if (curMode != 2 && btnSet.isHolded()) {
+    setAllAnodeStates(true);
     currentDigit = false;
     if (++curMode >= 2) curMode = 0;
     switch (curMode) {
@@ -109,6 +152,7 @@ void buttonsTick() {
         break;
     }
   }
+
   if (btnSet.isClick()) {
     if (curMode == 1) currentDigit = !currentDigit; // настройка времени
   }

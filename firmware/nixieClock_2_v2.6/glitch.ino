@@ -1,12 +1,7 @@
 void glitchTick() {
   if (!glitchFlag && secs > 7 && secs < 55) {
     if (glitchTimer.isReady()) {
-      glitchFlag = true;
-      indiState = 0;
-      glitchCounter = 0;
-      glitchMax = random(2, 6);
-      glitchIndic = random(0, 4);
-      glitchTimer.setInterval(random(1, 6) * 20);
+      initializeGlitches();
     }
   } else if (glitchFlag && glitchTimer.isReady()) {
     indiDimm[glitchIndic] = indiState * indiMaxBright;
@@ -19,4 +14,13 @@ void glitchTick() {
       indiDimm[glitchIndic] = indiMaxBright;
     }
   }
+}
+
+void initializeGlitches() {
+  glitchFlag = true;
+  indiState = 0;
+  glitchCounter = 0;
+  glitchMax = random(2, 6);
+  glitchIndic = random(0, 4);
+  glitchTimer.setInterval(random(1, 6) * 20);
 }

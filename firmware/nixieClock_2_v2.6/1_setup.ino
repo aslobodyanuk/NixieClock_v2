@@ -38,16 +38,20 @@ void setup() {
   mins = now.minute();
   hrs = now.hour();
 
+  #define EEPROM_INITIALIZE_CHECK_VALUE 100
+
   // EEPROM
-  if (EEPROM.read(1023) != 100) {   // первый запуск
-    EEPROM.put(1023, 100);
+  if (EEPROM.read(1023) != EEPROM_INITIALIZE_CHECK_VALUE) {   // первый запуск
+    EEPROM.put(1023, EEPROM_INITIALIZE_CHECK_VALUE);
     EEPROM.put(0, FLIP_EFFECT);
     EEPROM.put(1, BACKL_MODE);
     EEPROM.put(2, GLITCH_ALLOWED);
+    EEPROM.put(3, TIME_SHIFT);
   }
   EEPROM.get(0, FLIP_EFFECT);
   EEPROM.get(1, BACKL_MODE);
   EEPROM.get(2, GLITCH_ALLOWED);
+  EEPROM.get(3, TIME_SHIFT);
 
   /*if (EEPROM.read(100) != 66) {   // проверка на первый запуск. 66 от балды
     EEPROM.write(100, 66);

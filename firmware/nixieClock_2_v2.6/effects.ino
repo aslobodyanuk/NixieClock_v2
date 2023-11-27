@@ -226,3 +226,10 @@ void flipTick() {
     }
   }
 }
+
+void setAllAnodeStates(boolean value) {
+  anodeStates[0] = value;
+  anodeStates[1] = value;
+  anodeStates[2] = value;
+  anodeStates[3] = value;
+}
