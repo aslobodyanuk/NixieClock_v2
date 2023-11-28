@@ -13,15 +13,8 @@ void calculateTime() {
       newTimeFlag = true;   // флаг что нужно поменять время
       secs = 0;
       mins++;
-      minsCount++;
 
-      if (minsCount >= SYNC_RTC_EVERY_MINUTES) {            // каждые SYNC_RTC_EVERY_MINUTES мин синхронизация с RTC
-        minsCount = 0;
-        DateTime now = rtc.now();       // синхронизация с RTC
-        secs = now.second();
-        mins = now.minute();
-        hrs = now.hour();
-      }
+      syncRTC();
 
       if (mins % BURN_PERIOD == 0) burnIndicators();     // чистим чистим!
 
@@ -70,12 +63,12 @@ void calculateTime() {
 
 void adjustRTCTimeShift() {
 
-  if (mins != 59 || secs != 59) {
+  if (mins != 30 || secs != 30) {
     return;
   }
 
-  // When it`s 00:59:59 reset timeShiftAdjusted so that next time we could do an adjustment
-  if (hrs == 00) {
+  // When it`s 04:30:30 reset timeShiftAdjusted so that next time we could do an adjustment
+  if (hrs == 4) {
     timeShiftAdjusted = false;
     return;
   }
@@ -84,22 +77,33 @@ void adjustRTCTimeShift() {
     return;
   }
 
-  // When it`s 23:59:59 do an adjustment accordnig to TIME_SHIFT setting
-  if (hrs != 23) {
+  // When it`s 3:30:30 do an adjustment accordnig to TIME_SHIFT setting
+  if (hrs != 3) {
     return;
   }
 
   int8_t minutesDifference = TIME_SHIFT / 60;
   int8_t secondsDifference = TIME_SHIFT % 60;
 
-  // TODO: Actual code on the clock, this is not correct, need to reupload
-  //mins = mins - minutesDifference;
-  //secs = secs - secondsDifference;
-
   mins = mins + minutesDifference;
   secs = secs + secondsDifference;
 
   rtc.adjust(DateTime(2019, 12, 05, hrs, mins, secs));
 
+  newTimeFlag = true;
   timeShiftAdjusted = true;
+}
+
+void syncRTC() {
+  minsCount++;
+
+  if (minsCount < SYNC_RTC_EVERY_MINUTES) {            // каждые SYNC_RTC_EVERY_MINUTES мин синхронизация с RTC
+    return;
+  }
+
+  minsCount = 0;
+  DateTime now = rtc.now();       // синхронизация с RTC
+  secs = now.second();
+  mins = now.minute();
+  hrs = now.hour();
 }
