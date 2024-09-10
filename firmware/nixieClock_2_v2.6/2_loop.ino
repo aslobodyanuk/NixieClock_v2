@@ -6,4 +6,5 @@ void loop() {
   if (GLITCH_ALLOWED && mode == 0) glitchTick();  // глюки
   buttonsTick();                                  // кнопки
   settingsTick();                                 // настройки
+  serialTimeSyncTick();
 }

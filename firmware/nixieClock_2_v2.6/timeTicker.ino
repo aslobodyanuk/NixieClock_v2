@@ -7,8 +7,6 @@ void calculateTime() {
     dotBrightCounter = 0;
     secs++;
 
-    adjustRTCTimeShift();
-
     if (secs > 59) {
       newTimeFlag = true;   // флаг что нужно поменять время
       secs = 0;
@@ -61,37 +59,13 @@ void calculateTime() {
   */
 }
 
-void adjustRTCTimeShift() {
+void syncTimeFromSerial() {
 
-  if (mins != 30 || secs != 30) {
+  if (_isSyncTimeEmpty) {
     return;
   }
 
-  // When it`s 04:30:30 reset timeShiftAdjusted so that next time we could do an adjustment
-  if (hrs == 4) {
-    timeShiftAdjusted = false;
-    return;
-  }
-
-  if (TIME_SHIFT == 0 || timeShiftAdjusted == true) {
-    return;
-  }
-
-  // When it`s 3:30:30 do an adjustment accordnig to TIME_SHIFT setting
-  if (hrs != 3) {
-    return;
-  }
-
-  int8_t minutesDifference = TIME_SHIFT / 60;
-  int8_t secondsDifference = TIME_SHIFT % 60;
-
-  mins = mins + minutesDifference;
-  secs = secs + secondsDifference;
-
-  rtc.adjust(DateTime(2019, 12, 05, hrs, mins, secs));
-
-  newTimeFlag = true;
-  timeShiftAdjusted = true;
+  rtc.adjust(DateTime(2019, 12, 05, _syncHrs, _syncMins, _syncSecs));
 }
 
 void syncRTC() {
@@ -100,6 +74,8 @@ void syncRTC() {
   if (minsCount < SYNC_RTC_EVERY_MINUTES) {            // каждые SYNC_RTC_EVERY_MINUTES мин синхронизация с RTC
     return;
   }
+
+  syncTimeFromSerial();
 
   minsCount = 0;
   DateTime now = rtc.now();       // синхронизация с RTC
