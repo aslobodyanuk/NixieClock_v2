@@ -1,13 +1,11 @@
 #include <NTPClient.h>
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
-#include <SimplePortal.h>
 #include <FileData.h>
 #include <LittleFS.h>
+#include "CustomSimplePortal.h"
 
-// Get timezone from https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv
 #define NTP_SERVER "pool.ntp.org"
-#define TIMEZONE "CET-1CEST,M3.5.0,M10.5.0/3"
 
 #define LED_PIN 2
 
@@ -23,9 +21,11 @@ unsigned long _configPortalTimer = 0;
 unsigned long _configPortalTimoutTimer = 0;
 byte _status = STATUS_CONFIG_PORTAL;
 
+// Get timezone from https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv
 struct ConnectionData {
   char ssid[32];
   char pswd[32];
+  char timezone[64];
 };
 ConnectionData _connectionData;
 
@@ -38,8 +38,15 @@ void setup(){
 
   pinMode(LED_PIN, OUTPUT);
   initializeConnectionData();
-  configTime(TIMEZONE, NTP_SERVER);
+  setTimeZoneCallback(timezoneChanged);
   portalStart();
+}
+
+void timezoneChanged(char* timezone) {
+  strcpy(_connectionData.timezone, timezone);
+  Serial.print("Received new timezone: ");
+  Serial.println(_connectionData.timezone);
+  _connectionFileData.updateNow();
 }
 
 void loop() {
@@ -157,6 +164,7 @@ void connectToWifi() {
     Serial.println(WiFi.localIP());
   }
 
+  configTime(_connectionData.timezone, NTP_SERVER);
   _status = STATUS_WIFI_CONNECT;
 }
 
@@ -166,6 +174,9 @@ void printConnectionData() {
 
   Serial.print("Saved pswd: ");
   Serial.println(_connectionData.pswd);
+
+  Serial.print("Saved timezone: ");
+  Serial.println(_connectionData.timezone);
 }
 
 boolean timePeriodIsOver(unsigned long & periodStartTime, unsigned long timePeriod) {
