@@ -8,8 +8,9 @@
 RTC_DS3231 rtc;
 
 // таймеры
-timerMinim dotTimer(500);                // полсекундный таймер для часов
+timerMinim calcTimeTimer(1000);           // полсекундный таймер для часов
 timerMinim dotBrightTimer(DOT_TIMER);    // таймер шага яркости точки
+timerMinim dotBlinkTimer(DOT_TIME);      // таймер мигания точки
 timerMinim backlBrightTimer(30);         // таймер шага яркости подсветки
 timerMinim almTimer((long)ALM_TIMEOUT * 1000);
 timerMinim flipTimer(FLIP_SPEED[FLIP_EFFECT]);
@@ -27,14 +28,10 @@ volatile int8_t indiCounter[4];   // счётчик каждого индика�
 volatile int8_t indiDigits[4];    // цифры, которые должны показать индикаторы (0-10)
 volatile int8_t curIndi;          // текущий индикатор (0-3)
 
-boolean dotFlag;
 int8_t hrs, mins, secs;
 int8_t alm_hrs, alm_mins;
 int8_t mode = 0;    // 0 часы, 1 температура, 2 настройка будильника, 3 настройка часов, 4 аларм
-boolean changeFlag;
-boolean blinkFlag;
 byte indiMaxBright = INDI_BRIGHT, dotMaxBright = DOT_BRIGHT, backlMaxBright = BACKL_BRIGHT;
-boolean alm_flag;
 boolean dotBrightFlag, dotBrightDirection, backlBrightFlag, backlBrightDirection, indiBrightDirection;
 int dotBrightCounter, backlBrightCounter, indiBrightCounter;
 byte dotBrightStep;
@@ -52,7 +49,6 @@ boolean lampState = false;
 boolean anodeStates[] = {1, 1, 1, 1};
 byte currentLamp, flipEffectStages;
 bool trainLeaving;
-boolean timeShiftAdjusted = false;
 
 const uint8_t CRTgamma[256] PROGMEM = {
   0,    0,    1,    1,    1,    1,    1,    1,

@@ -1,5 +1,5 @@
 void loop() {
-  if (dotTimer.isReady()) calculateTime();        // каждые 500 мс пересчёт и отправка времени
+  if (calcTimeTimer.isReady()) calculateTime();        // каждые 500 мс пересчёт и отправка времени
   if (newTimeFlag && curMode == 0) flipTick();    // перелистывание цифр
   dotBrightTick();                                // плавное мигание точки
   backlBrightTick();                              // плавное мигание подсветки ламп

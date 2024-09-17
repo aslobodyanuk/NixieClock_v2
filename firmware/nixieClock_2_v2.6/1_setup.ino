@@ -68,8 +68,7 @@ void setup() {
     indiDimm[i] = indiMaxBright;
 
   // расчёт шага яркости точки
-  dotBrightStep = ceil((float)dotMaxBright * 2 / DOT_TIME * DOT_TIMER);
-  if (dotBrightStep == 0) dotBrightStep = 1;
+  calculateDotBrightStep();
 
   // дыхание подсветки
   if (backlMaxBright > 0)

@@ -28,6 +28,10 @@ void backlBrightTick() {
 }
 
 void dotBrightTick() {
+  if (dotBrightFlag == false && dotBlinkTimer.isReady()) {
+    dotBrightFlag = true;
+  }
+
   if (dotBrightFlag && dotBrightTimer.isReady()) {
     if (dotBrightDirection) {
       dotBrightCounter += dotBrightStep;
@@ -41,9 +45,10 @@ void dotBrightTick() {
         dotBrightDirection = true;
         dotBrightFlag = false;
         dotBrightCounter = 0;
+        dotBlinkTimer.reset();
       }
     }
-    setPWM(DOT, getPWM_CRT(dotBrightCounter));
+    setPWM(DOT, dotBrightCounter);
   }
 }
 
@@ -64,8 +69,7 @@ void changeBright() {
     indiDimm[i] = indiMaxBright;
   }
 
-  dotBrightStep = ceil((float)dotMaxBright * 2 / DOT_TIME * DOT_TIMER);
-  if (dotBrightStep == 0) dotBrightStep = 1;
+  calculateDotBrightStep();
 
   if (backlMaxBright > 0)
     backlBrightTimer.setInterval((float)BACKL_STEP / backlMaxBright / 2 * BACKL_TIME);
@@ -74,4 +78,9 @@ void changeBright() {
   //change PWM to apply backlMaxBright in case of maximum bright mode
   if (BACKL_MODE == 1) setPWM(BACKL, backlMaxBright);
 #endif
+}
+
+void calculateDotBrightStep() {
+  dotBrightStep = ceil((float)dotMaxBright * 2 / DOT_TIME * DOT_TIMER);
+  if (dotBrightStep == 0) dotBrightStep = 1;
 }
