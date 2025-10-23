@@ -118,8 +118,9 @@ byte FLIP_EFFECT = 1;
 #define GLITCH_MAX 120      // максимальное время между глюками, с
 
 // ======================  МИГАНИЕ =======================
-#define DOT_TIME 1500        // время мигания точки, мс
-#define DOT_TIMER 8        // шаг яркости точки, мс
+#define DOT_BLINK_EVERY_MS 2800
+#define DOT_EFFECT_TIMER_MS 10
+#define FADE_DURATION_MS 850
 
 #define BACKL_STEP 2        // шаг мигания подсветки
 #define BACKL_TIME 5000     // период подсветки, мс

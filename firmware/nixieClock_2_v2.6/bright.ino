@@ -32,7 +32,7 @@ void dotBrightTick() {
     dotBrightFlag = true;
   }
 
-  if (dotBrightFlag && dotBrightTimer.isReady()) {
+  if (dotBrightFlag && dotEffectTimer.isReady()) {
     if (dotBrightDirection) {
       dotBrightCounter += dotBrightStep;
       if (dotBrightCounter >= dotMaxBright) {
@@ -48,7 +48,7 @@ void dotBrightTick() {
         dotBlinkTimer.reset();
       }
     }
-    setPWM(DOT, dotBrightCounter);
+    setPWM(DOT, floor(dotBrightCounter));
   }
 }
 
@@ -81,6 +81,6 @@ void changeBright() {
 }
 
 void calculateDotBrightStep() {
-  dotBrightStep = ceil((float)dotMaxBright * 2 / DOT_TIME * DOT_TIMER);
-  if (dotBrightStep == 0) dotBrightStep = 1;
+  dotBrightStep = (float)(dotMaxBright * DOT_EFFECT_TIMER_MS) / FADE_DURATION_MS;
+  if (dotBrightStep <= 0) dotBrightStep = 1;
 }

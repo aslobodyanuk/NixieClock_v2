@@ -9,8 +9,8 @@ RTC_DS3231 rtc;
 
 // таймеры
 timerMinim calcTimeTimer(1000);           // полсекундный таймер для часов
-timerMinim dotBrightTimer(DOT_TIMER);    // таймер шага яркости точки
-timerMinim dotBlinkTimer(DOT_TIME);      // таймер мигания точки
+timerMinim dotEffectTimer(DOT_EFFECT_TIMER_MS);    // таймер шага яркости точки
+timerMinim dotBlinkTimer(DOT_BLINK_EVERY_MS);      // таймер мигания точки
 timerMinim backlBrightTimer(30);         // таймер шага яркости подсветки
 timerMinim almTimer((long)ALM_TIMEOUT * 1000);
 timerMinim flipTimer(FLIP_SPEED[FLIP_EFFECT]);
@@ -31,10 +31,10 @@ volatile int8_t curIndi;          // текущий индикатор (0-3)
 int8_t hrs, mins, secs;
 int8_t alm_hrs, alm_mins;
 int8_t mode = 0;    // 0 часы, 1 температура, 2 настройка будильника, 3 настройка часов, 4 аларм
+float dotBrightCounter, dotBrightStep;
 byte indiMaxBright = INDI_BRIGHT, dotMaxBright = DOT_BRIGHT, backlMaxBright = BACKL_BRIGHT;
 boolean dotBrightFlag, dotBrightDirection, backlBrightFlag, backlBrightDirection, indiBrightDirection;
-int dotBrightCounter, backlBrightCounter, indiBrightCounter;
-byte dotBrightStep;
+int backlBrightCounter, indiBrightCounter;
 boolean newTimeFlag;
 boolean flipIndics[4];
 byte newTime[4];
