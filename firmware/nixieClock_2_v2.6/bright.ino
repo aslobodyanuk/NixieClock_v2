@@ -45,7 +45,6 @@ void dotBrightTick() {
         dotBrightDirection = true;
         dotBrightFlag = false;
         dotBrightCounter = 0;
-        dotBlinkTimer.reset();
       }
     }
     setPWM(DOT, floor(dotBrightCounter));

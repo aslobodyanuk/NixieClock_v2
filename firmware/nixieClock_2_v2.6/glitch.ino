@@ -6,7 +6,7 @@ void glitchTick() {
   } else if (glitchFlag && glitchTimer.isReady()) {
     indiDimm[glitchIndic] = indiState * indiMaxBright;
     indiState = !indiState;
-    glitchTimer.setInterval(random(1, 6) * 20);
+    setRandomGlitchInterval();
     glitchCounter++;
     if (glitchCounter > glitchMax) {
       glitchTimer.setInterval(random(GLITCH_MIN * 1000L, GLITCH_MAX * 1000L));
@@ -20,7 +20,11 @@ void initializeGlitches() {
   glitchFlag = true;
   indiState = 0;
   glitchCounter = 0;
-  glitchMax = random(2, 6);
+  glitchMax = random(3, 9);
   glitchIndic = random(0, 4);
-  glitchTimer.setInterval(random(1, 6) * 20);
+  setRandomGlitchInterval();
+}
+
+void setRandomGlitchInterval() {
+  glitchTimer.setInterval(random(30, 101));
 }
